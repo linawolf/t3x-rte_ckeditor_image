@@ -19,6 +19,7 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Resource\Service\MagicImageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Frontend\Plugin\AbstractPlugin;
 
 use function get_class;
@@ -230,7 +231,7 @@ class ImageRenderingController extends AbstractPlugin
     protected function isExternalImage(string $imageSource): bool
     {
         // https://github.com/netresearch/t3x-rte_ckeditor_image/issues/187
-        if (strpos($imageSource, '/typo3/image/process?token') !== false) {
+        if (strpos($imageSource, 'typo3/image/process?token') !== false) {
             // is a 11LTS backend processing url only valid for BE users, thus reprocessing needed
             return false;
         }

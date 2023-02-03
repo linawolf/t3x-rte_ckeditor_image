@@ -107,8 +107,7 @@ class SelectImageController extends ElementBrowserController
 
         $file          = $this->getImage((int) $id);
         $processedFile = $this->processImage($file, $params);
-
-        $lang = $this->getLanguageService();
+        $lang          = $this->getLanguageService();
 
         // Include language files
         $this->getLanguageService()

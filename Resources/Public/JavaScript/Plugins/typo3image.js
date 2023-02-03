@@ -63,60 +63,62 @@
 
                 // Update image when editor loads
                 if (existingImages.length) {
-                    $.each(existingImages, function(i,curImg) {
-                        var $curImg = $(curImg),
-                            uid = $curImg.attr('data-htmlarea-file-uid'),
-                            table = $curImg.attr('data-htmlarea-file-table'),
-                            routeUrl = editor.config.typo3image.routeUrl,
-                            url = routeUrl
-                                + (routeUrl.indexOf('?') === -1 ? '?' : '&')
-                                + 'action=info'
-                                + '&fileId=' + encodeURIComponent(uid)
-                                + '&table=' + encodeURIComponent(table);
+                    editor.on( 'contentDom', function() {
+                        $.each(existingImages, function(i,curImg) {
+                            var $curImg = $(curImg),
+                                uid = $curImg.attr('data-htmlarea-file-uid'),
+                                table = $curImg.attr('data-htmlarea-file-table'),
+                                routeUrl = editor.config.typo3image.routeUrl,
+                                url = routeUrl
+                                    + (routeUrl.indexOf('?') === -1 ? '?' : '&')
+                                    + 'action=info'
+                                    + '&fileId=' + encodeURIComponent(uid)
+                                    + '&table=' + encodeURIComponent(table);
 
-                        if (typeof $curImg.attr('width') !== 'undefined' && $curImg.attr('width').length) {
-                            url += '&P[width]=' + $curImg.attr('width');
-                        }
-
-                        if (typeof $curImg.attr('height') !== 'undefined' && $curImg.attr('height').length) {
-                            url += '&P[height]=' + $curImg.attr('height');
-                        }
-
-                        $.getJSON(url, function(newImg) {
-                            // RTEs in flexforms might contain dots in their ID, so we need to escape them
-                            var escapedEditorId = editor.element.$.id.replace('.', '\\.');
-
-                            var realEditor = $('#cke_' + escapedEditorId).find('iframe').contents().find('body'),
-                                newImgUrl = newImg.processed.url || newImg.url,
-                                imTag = realEditor.contents().find('img[data-htmlarea-file-uid='+uid+']');
-
-                            // Sets the title attribute if any
-                            if (typeof $curImg.attr('title') !== 'undefined' && $curImg.attr('title').length) {
-                                imTag.attr('title', $curImg.attr('title'));
-                            }
-
-                            // Sets the width attribute if any
                             if (typeof $curImg.attr('width') !== 'undefined' && $curImg.attr('width').length) {
-                                imTag.attr('width', $curImg.attr('width'));
+                                url += '&P[width]=' + $curImg.attr('width');
                             }
 
-                            // Sets the height attribute if any
                             if (typeof $curImg.attr('height') !== 'undefined' && $curImg.attr('height').length) {
-                                imTag.attr('height', $curImg.attr('height'));
+                                url += '&P[height]=' + $curImg.attr('height');
                             }
 
-                            // Sets the style attribute if any
-                            if (typeof $curImg.attr('style') !== 'undefined' && $curImg.attr('style').length) {
-                                imTag.attr('style', $curImg.attr('style'));
-                            }
+                            $.getJSON(url, function(newImg) {
+                                // RTEs in flexforms might contain dots in their ID, so we need to escape them
+                                var escapedEditorId = editor.element.$.id.replace('.', '\\.');
 
-                            // Replaces the current html with the updated one
-                            realEditor.html(realEditor.html());
+                                var realEditor = $('#cke_' + escapedEditorId).find('iframe').contents().find('body'),
+                                    newImgUrl = newImg.processed.url || newImg.url,
+                                    imTag = realEditor.contents().find('img[data-htmlarea-file-uid='+uid+']');
 
-                            // Replace current url with updated one
-                            if ($curImg.attr('src') && newImgUrl) {
-                                realEditor.html(realEditor.html().replaceAll($curImg.attr('src'), newImgUrl));
-                            }
+                                // Sets the title attribute if any
+                                if (typeof $curImg.attr('title') !== 'undefined' && $curImg.attr('title').length) {
+                                    imTag.attr('title', $curImg.attr('title'));
+                                }
+
+                                // Sets the width attribute if any
+                                if (typeof $curImg.attr('width') !== 'undefined' && $curImg.attr('width').length) {
+                                    imTag.attr('width', $curImg.attr('width'));
+                                }
+
+                                // Sets the height attribute if any
+                                if (typeof $curImg.attr('height') !== 'undefined' && $curImg.attr('height').length) {
+                                    imTag.attr('height', $curImg.attr('height'));
+                                }
+
+                                // Sets the style attribute if any
+                                if (typeof $curImg.attr('style') !== 'undefined' && $curImg.attr('style').length) {
+                                    imTag.attr('style', $curImg.attr('style'));
+                                }
+
+                                // Replaces the current html with the updated one
+                                realEditor.html(realEditor.html());
+
+                                // Replace current url with updated one
+                                if ($curImg.attr('src') && newImgUrl) {
+                                    realEditor.html(realEditor.html().replaceAll($curImg.attr('src'), newImgUrl));
+                                }
+                            });
                         });
                     });
                 }
@@ -212,7 +214,7 @@
     });
 
     /**
-     * 
+     *
      * @returns value
      */
     function getTitleText() {
@@ -225,7 +227,7 @@
     }
 
     /**
-     * 
+     *
      * @param url
      * @return relativeUrl
      */
@@ -245,7 +247,7 @@
                 return "/" + url;
             }
         }
-        
+
         return url;
     }
 
@@ -386,7 +388,7 @@
                 + '&bparams=' + bparams.join('|'),
             deferred = $.Deferred(),
             $modal;
-
+console.log(url);
         require(['TYPO3/CMS/Backend/Modal'], function (Modal) {
             $modal = Modal.advanced({
                 type: Modal.types.iframe,
